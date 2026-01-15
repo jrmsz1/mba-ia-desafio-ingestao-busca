@@ -1,5 +1,3 @@
-# Desafio MBA Engenharia de Software com IA - Full Cycle
-
 # Sistema RAG (Retrieval-Augmented Generation) com pgVector
 
 Sistema completo de RAG que realiza a ingestão de documentos PDF, converte o conteúdo em embeddings, armazena no PostgreSQL com pgVector e disponibiliza um chat interativo via CLI para consultas semânticas.
@@ -12,37 +10,49 @@ Sistema completo de RAG que realiza a ingestão de documentos PDF, converte o co
 
 ## Instalação
 
-### 1. Instalar dependências Python
+### 1. Configurar ambiente virtual Python
+
+Crie e ative um ambiente virtual antes de instalar as dependências:
+
+**Linux/macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+**Windows:**
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+### 2. Instalar dependências Python
+
+Com o ambiente virtual ativado, instale as dependências:
 
 ```bash
 pip install python-dotenv langchain-community langchain-text-splitters langchain-openai langchain-google-genai langchain-core langchain-postgres pypdf psycopg
 ```
 
-Ou crie um arquivo `requirements.txt`:
-
-```txt
-python-dotenv
-langchain-community
-langchain-text-splitters
-langchain-openai
-langchain-google-genai
-langchain-core
-langchain-postgres
-pypdf
-psycopg
-```
-
-E instale com:
+Ou instale com:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Configurar PostgreSQL com pgVector
+### 3. Configurar PostgreSQL com pgVector
 
 Certifique-se de que o PostgreSQL está rodando e a extensão pgVector está instalada.
 
-#### Usando Docker:
+#### Usando Docker Compose (Recomendado):
+
+Suba o banco de dados:
+
+```bash
+docker compose up -d
+```
+
+#### Ou usando Docker (comando direto):
 
 ```bash
 docker run -d \
@@ -105,26 +115,41 @@ Coloque o arquivo PDF que deseja processar no diretório do projeto e atualize a
 
 ```
 .
-├── ingest.py              # Script de ingestão de PDFs
-├── search.py              # Módulo de busca vetorial e LLM
-├── chat.py                # Interface CLI do chat interativo
+├── src/
+│   ├── ingest.py          # Script de ingestão de PDFs
+│   ├── search.py          # Módulo de busca vetorial e LLM
+│   └── chat.py            # Interface CLI do chat interativo
+├── docker-compose.yml     # Configuração do PostgreSQL
 ├── .env                   # Variáveis de ambiente (não commitar!)
 ├── document.pdf           # Seu documento PDF
 ├── requirements.txt       # Dependências Python
+├── venv/                  # Ambiente virtual Python (não commitar!)
 └── README.md             # Este arquivo
 ```
 
 ## Execução
 
-### 1. Executar a ingestão do PDF
+### Ordem de Execução
 
-Primeiro, você precisa processar e armazenar o documento:
+Siga estes passos na ordem correta:
+
+#### 1. Subir o banco de dados
 
 ```bash
-python ingest.py
+docker compose up -d
 ```
 
-### Saída esperada da ingestão
+Aguarde alguns segundos para o PostgreSQL inicializar completamente.
+
+#### 2. Executar a ingestão do PDF
+
+Processe e armazene o documento no banco vetorial:
+
+```bash
+python src/ingest.py
+```
+
+**Saída esperada:**
 
 ```
 Loading PDF: document.pdf
@@ -137,15 +162,15 @@ Storing documents in database...
 Successfully ingested 45 chunks into the database
 ```
 
-### 2. Iniciar o chat interativo
+#### 3. Iniciar o chat interativo
 
-Após a ingestão, inicie o chat para fazer perguntas sobre o documento:
+Após a ingestão bem-sucedida, inicie o chat para fazer perguntas:
 
 ```bash
-python chat.py
+python src/chat.py
 ```
 
-### Interface do chat
+**Interface do chat:**
 
 ```
 ============================================================
@@ -324,7 +349,7 @@ Após configurar o sistema, você pode:
 ```
 ┌──────────────┐
 │  document.pdf│
-└──────┬───────┘
+└───────┬──────┘
        │
        ▼
 ┌─────────────────┐
