@@ -1,6 +1,6 @@
 # Desafio MBA Engenharia de Software com IA - Full Cycle
 
-Descreva abaixo como executar a sua solução.# Sistema RAG (Retrieval-Augmented Generation) com pgVector
+# Sistema RAG (Retrieval-Augmented Generation) com pgVector
 
 Sistema completo de RAG que realiza a ingestão de documentos PDF, converte o conteúdo em embeddings, armazena no PostgreSQL com pgVector e disponibiliza um chat interativo via CLI para consultas semânticas.
 
